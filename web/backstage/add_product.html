@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <![endif]-->
+    <title>添加产品</title>
+</head>
+
+<body>
+<div class="margin inside_pages clearfix">
+    <div class="add_style clearfix relative">
+        <!--品牌展示 当通过品牌管理添加产品是显示该-->
+        <ul>
+            <li class="clearfix">
+                <label class="label_name col-xs-1">
+                    <i>*</i>商品名称：&nbsp;&nbsp;
+                </label>
+                <div class="Add_content col-xs-11">
+                    <input id="sh_name" name="" type="text" value=""  class="col-xs-6"/>
+                </div>
+            </li>
+
+            <li class="clearfix">
+                <label class="label_name col-xs-1">
+                    <i>*</i>选择分类：&nbsp;&nbsp;
+                </label>
+                <div class="Add_content col-xs-11">
+                   <span id="cityDanXuan" class="width200px fl_hsCheckData">
+
+                   </span>
+                </div>
+            </li>
+
+            <li class="clearfix">
+                <div class="col-xs-4">
+                    <label class="label_name col-xs-3">
+                        <i>*</i>商品原价：&nbsp;&nbsp;
+                    </label>
+                    <div class="Add_content col-xs-9">
+                        <input id = "sh_price" name="" type="text" value=""  class="col-xs-7"/><em class="Prompt">元</em>
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <label class="label_name col-xs-3">
+                        <i>*</i>商品数量：&nbsp;&nbsp;
+                    </label>
+                    <div class="Add_content col-xs-9">
+                        <input id = "sh_count" name="" type="text" value=""  class="col-xs-7"/><em class="Prompt">件</em>
+                    </div>
+                </div>
+            </li>
+
+            <li class="clearfix">
+                <label class="label_name col-xs-1">
+                    <i>*</i>商品描述：&nbsp;&nbsp;
+                </label>
+                <div class="Add_content col-xs-11">
+                    <input id = "sh_comment" class="col-xs-6" name="" type="text" value=""/>
+                </div>
+            </li>
+
+            <li class="clearfix">
+                <label class="label_name col-xs-1">
+                    <i>*</i>产品图片：&nbsp;&nbsp;
+                </label>
+                <div class="Add_content col-xs-11" id="Upload">
+                    <div class="images_Upload clearfix margin-bottom" id="Uimages_Upload_0">
+                        <span class="Upload_img">
+                            <input name="" type="file" id="file1" accept="image/*" />
+                            <input style="margin-top: 5px" type="text" name="title" required lay-verify="required" placeholder="请输入图片描述" autocomplete="off" class="layui-input"/>
+                        </span>
+                        <a  class="operating delete_Upload" ><i class="fa fa-remove"></i></a>
+                        <a  class="operating" title="预览" onclick="preview_img(this)"><i class="fa  fa-image"></i></a>
+                    </div>
+                    <button type="button" class="add_Upload bg-deep-blue" id="add_Upload" onclick="add_Upload()">
+                        <i class="fa  fa-plus"></i>
+                    </button>
+                </div>
+            </li>
+            <!--     <li class="clearfix"><label class="label_name col-xs-1"><i>*</i>内容介绍：&nbsp;&nbsp;</label>-->
+            <!--     <div class="Add_content col-xs-11"><script id="editor" type="text/plain" style="width:100%;height:500px;"></script></div>-->
+            <!--     </li>  -->
+        </ul>
+        <div class="Button_operation btn_width">
+            <button id = "addShInfo" class="btn button_btn bg-deep-blue" type="button">保存并提交</button>
+            <button class="btn button_btn bg-gray" type="button">取消添加</button>
+        </div>
+    </div>
+</div>
+    <div id = "view1" style="width: 800px; height: 700px; background-position:center; background-repeat: no-repeat"> </div>
+</body>
+</html>
+<!--复文本编辑框-->
+<script type="text/javascript" charset="utf-8" src="js/utf8-jsp/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/utf8-jsp/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="js/utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+<link href="css/shop.css" type="text/css" rel="stylesheet" />
+<link href="css/Sellerber.css" type="text/css"  rel="stylesheet" />
+<link href="css/bkg_ui.css" type="text/css"  rel="stylesheet" />
+<link href="font/css/font-awesome.min.css"  rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.9.1.min.js" type="text/javascript" ></script>
+<script src="js/Sellerber.js" type="text/javascript"></script>
+<script src="js/jquery.dataTables.min.js"></script>
+<script src="js/jquery.dataTables.bootstrap.js"></script>
+<script src="js/layer/layer.js" type="text/javascript"></script>
+<script src="js/laydate/laydate.js" type="text/javascript"></script>
+<script src="js/hsCheckData.js" type="text/javascript"></script>
+<script src="js/html5shiv.js" type="text/javascript"></script>
+<script src="js/respond.min.js"></script>
+<script src="js/css3-mediaqueries.js"  type="text/javascript"></script>
+<script>
+    var cityData = new Array();
+    $.ajax({
+        url:"/zh_uai/type",
+        async:false,
+        dataType:"json",
+        success:function(data){
+            var i = 0;
+            $(data).each(function(){
+                cityData[i++] = {[this.id]:this.name,"childCity":[]};
+            })
+        }
+    })
+
+    $('#cityDanXuan').hsCheckData({
+        isShowCheckBox: false, //默认为false
+        data: cityData //将此数组中的数据添加到layui的下拉框中
+    });
+
+    $(document).ready(function(){
+        var spotMax = 5;//设置上传图片文件最大个数
+        if($('div.images_Upload').size() >= spotMax) {
+            //如果图片个数大于或者等于5，就隐藏添加图标
+            $(obj).hide();
+        }
+        $("#add_Upload").on('click',function(){
+            var i = 0;
+            $('.images_Upload').each(function(){
+                $(this).attr('id',"Uimages_Upload_"+i)
+                i++
+            });
+            addSpot(this, spotMax, "Uimages_Upload_"+i);
+        });
+    });
+    function addSpot(obj, sm ,sid) {
+        $("#Upload").append("<div class='images_Upload clearfix margin-bottom' id='"+sid+"'>"+
+            "<span class='Upload_img'><input name='' type='file' />" +
+            "<input style=\"margin-top: 5px\" type=\"text\" name=\"title\" required lay-verify=\"required\" placeholder=\"请输入图片描述\" autocomplete=\"off\" class=\"layui-input\">" +
+            "</span>"+
+            "<a href='javascript:ovid()' class='operating delete_Upload'><i class='fa fa-remove'></i></a>"+
+            "<a href='javascript:ovid()' class='operating' onclick='preview_img(this)'><i class='fa  fa-image'></i></a>"+
+            "</div>&nbsp;")
+
+            .find(".delete_Upload").click(function(){
+                if($('div.images_Upload').size()==1){
+                    layer.msg('请至少上传一张图片!',{icon:0,time:1000});
+                }
+                else{
+                    $(this).parent().remove();
+                    $('#add_Upload').show();
+                }
+            });
+        if($('.delete_Upload').size() >= sm) {
+            $(obj).hide();layer.msg('当前为最大图片添加量!',{icon:0,time:1000});
+        }
+    }
+    /*checkbox激发事件*/
+    $('#checkbox').on('click',function(){
+        if($('input[name="checkbox"]').prop("checked")){
+            $('.Date_selection ').css('display','block');
+        }
+        else{
+
+            $('.Date_selection').css('display','none');
+        }
+    });
+    function add_category(){
+        $(".add_category_style").toggle();
+
+    }
+
+    function preview_img(obj) {
+            var files = $(obj).parent().find("input")[0].files;
+            var file;
+            if (files && files.length) {
+                file = files[0];
+                var name = URL.createObjectURL(file);
+                document.getElementById('view1').style.background = "url("+name+")";
+                alert(URL.createObjectURL(file))
+            } else {
+                alert("Please choose image file");
+            }
+
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: ['800px', '700px'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: $('#view1')
+        });
+
+    }
+</script>
+
+<script type="text/javascript">
+
+    function addData() {
+        var sh_name = $("#sh_name").val();
+        var sh_price = $("#sh_price").val();
+        var sh_comment = $("#sh_comment").val();
+        var cityDanXuan = $("#cityDanXuan").attr("data-id");
+        var sh_count = $("#sh_count").val();
+        var resutl;
+
+        $.ajax({
+            url:"/zh_uai/add",
+            async: false,
+            data:{sh_name:sh_name,sh_price:sh_price,sh_comment:sh_comment,cityDanXuan:cityDanXuan,sh_count:sh_count},
+            dataType:"text",
+            success: function(data){
+                if(data == 0) {
+                    alert("FBI Waring")
+                } else {
+                    result = data;
+                }
+            },
+            error:function(e){
+                alert(e)
+            }
+        })
+        return result;
+    }
+
+    $("#addShInfo").click(function(){
+
+
+        var fileobjs = new Array();
+        var fileComment = new Array();
+        var filePaths = new Array();
+
+        // var fileobj = $("#img")[0].files[0];
+        var form = new FormData();
+
+        for(var i = 0; i <= 4; i++){
+            // alert($("div#Uimages_Upload_" + i + " input").val())
+            if($("div#Uimages_Upload_" + i + " input:eq(0)").val() != undefined) {
+                fileobjs[i] = $("div#Uimages_Upload_" + i + " input:eq(0)")[0].files[0];
+                filePaths[i] = $("div#Uimages_Upload_" + i + " input:eq(0)")[0].files[0].name;
+                fileComment[i] = $("div#Uimages_Upload_" + i + " input:eq(1)").val();
+                form.append("img", fileobjs[i]);
+            }
+        }
+        form.append("uesr", 'alex');
+        // $.ajax({
+        //            url: "/ScienceFictionCity/BookAdd",
+        //            data: {
+        //
+        //            },
+        //            type: "get",
+        //            dataType: "text",
+        //            success: function (data) {
+        //                if (data == "1") {
+        //                    layer.alert('添加成功 ！', {
+        //                        title: '提示框',
+        //                        icon: 1,
+        //                    });
+        //                    fileUpload(form);
+        //                } else {
+        //                 layer.alert("添加失败，请联系BUG组组长",{
+        //                     title: '提示框',
+        //                     icon:0,
+        //                 });
+        //                }
+        //            },
+        //            error:function(a,b,c){
+        //                alert(a+","+b+","+c)
+        //            }
+        // })
+
+
+        var id = addData();
+        imageInfo(fileComment,id,filePaths,form);
+    })
+
+    function imageInfo(imgInfo,goodId,imgPath,form) {
+        $.ajax({
+            url:"/zh_uai/imgs",
+            type:"post",
+            async:false,
+            traditional: true,
+            data:{arrImg:imgInfo,goodId:goodId,imgPath:imgPath},
+            success:function(data) {
+                if(data==1) {
+                    fileUpload(form)
+                    alert("yes");
+                }
+            },
+            error : function(){
+                alert("FBI Waring");
+            }
+        })
+    }
+
+    function fileUpload(form) {
+        $.ajax({
+            type:"post",
+            async:false,
+            url:"/zh_uai/upload",
+            data:form,
+            dataType:"text",
+            processData : false, // 使数据不做处理
+            contentType : false, // 不要设置Content-Type请求头
+            success:function (data) {
+            },
+            error:function(){
+                alert("FBI Waring")
+            }
+        })
+    }
+</script>
+

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+</head>
+<body><!-------------------reg-------------------------->
+<div class="reg">
+    <form method="post"><h1><a href="index.html"><img src="img/temp/logo.png"></a></h1>
+        <p>用户注册</p>
+        <p><input type="text" name="" class="userName"  placeholder="请输入昵称"></p>
+        <span class="nametitle" style="font-size: 12px;color: red;display: none;"></span>
+        <p><input type="text" name="" class="userID"  placeholder="请输入注册账号"></p>
+        <span class="IDtitle" style="font-size: 12px;color: red;display: none;"></span>
+        <p><input type="text" name="" class="pwd" placeholder="请输入密码"></p>
+        <span class="pwdtitle" style="font-size: 12px;color: red;display: none;"></span>
+        <p><input type="text" name="" class="tpwd"  placeholder="请确认密码"></p>
+        <span class="tpwdtitle" style="font-size: 12px;color: red;display: none;"></span>
+        <p class="txtL txt"><input class="code" type="text" name="" value="" placeholder="验证码"><img
+                src="img/temp/code.jpg"></p>
+        <p><input type="button" id="regs" value="注册"></p>
+        <p class="txtL txt">完成此注册，即表明您同意了我们的<a href="#">
+            &lt;使用条款和隐私策略&gt;
+        </a> </p>
+        <p class="txt"><a href="login.html"><span></span>已有账号登录</a></p>
+       <a href="#" class="off"><img src="img/temp/off.jpg"></a></form>
+</div>
+</body>
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="js/public.js"></script>
+<script type="text/javascript">
+    /*
+       * 这是注册页面
+       *
+       * */
+
+    $(".userID").focus(function () {
+        $(".IDtitle").text("").hide();
+        $("#reg").removeAttr("disabled");//删除禁用提交按钮事件，解出禁用提交键
+    });
+    //用户账号对应框失去焦点事件
+    $(".userID").blur(function(){
+
+        var userSID=$(".userID").val();
+        $.ajax({
+            url:"/zh_uai/login",
+            type:"GET",
+            data:{"userSID":userSID,"action":"getUser"},//tuseridjudge:用户账号框，tuserid相同
+            dataType:"text",
+            success:function(msg){
+                if(msg.indexOf("true")>-1){
+                    $(".IDtitle").text("该账号已存在!").show();
+                    $("#reg").attr("disabled","disabled");//禁用提交键
+                }
+            },
+            error:function(){
+                alert("请求失败，请与客服联系");
+            }
+        });
+    });
+    $(".pwd").focus(function () {
+        $(".pwdtitle").hide();
+    });
+    $(".tpwd").focus(function () {
+        $(".tpwdtitle").hide();
+    });
+    $(".userName").focus(function () {
+        $(".nametitle").hide();
+    });
+
+    /*
+    *点击注册按钮事件
+    * */
+    $("#regs").click(function () {
+        alert("这是注册按钮事件");
+        var userName=$(".userName").val();
+        var userID=$(".userID").val();
+        var pwd=$(".pwd").val();
+        var tpwd=$(".tpwd").val();
+        if(userName=="" || userName==null){
+            $(".nametitle").text("请输入账号所用的昵称！").show();
+        }else if(userID==null || userID==""){
+            $(".IDtitle").text("请输入需要注册的账号！").show();
+            //$(".userID").focus();
+        }else if(pwd=="" || pwd==null){
+            $(".pwdtitle").text("请输入登录密码！").show();
+            // $(".pwd").focus();
+        }else if(tpwd=="" || tpwd==null){
+            $(".tpwdtitle").text("请确认密码！").show();
+            // $(".tpwd").focus();
+        }else if(tpwd!=pwd){
+            $(".pwdtitle").text("两次密码输入不相同！").show();
+            $(".tpwd").focus();
+        }else{
+            $.ajax({
+                url:"/zh_uai/login",
+                type:"GET",
+                data:{"userName":userName,"userID":userID,"pwd":pwd,"action":"reg"},
+                dataType:"text",
+                success:function(msg){
+                    if(msg.indexOf("true")>-1){
+                        window.location.href("index.html");
+                    }else {
+                        alert("注册有问题！")
+                    }
+                },
+                error:function(){
+                    alert("请求失败，请与客服联系");
+                }
+            });
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.zh_ai.dao.BlackDao">
+	<resultMap id="blockMap" type="com.zh_ai.entity.Black">
+		<result property="initialDate" column="black_initialDate" />
+		<result property="date" column="black_date"/>
+		<association property="user" column="black_uid" select="com.zh_ai.dao.UserDao.getUserInfo" />
+	</resultMap>
+
+	<select id="getAllBlack" resultMap="blockMap">
+		select * from zh_black
+	</select>
+
+	<select id="getUid" resultMap="blockMap">
+		select * from `zh_black` where `black_uid`=#{uid}
+	</select>
+
+	<select id="getDateInfo" resultMap="blockMap" parameterType="com.zh_ai.entity.Black">
+		select * from `zh_black` while `black_initialDate` <![CDATA[>]]> #{initialDate} and `black_initialDate` <![CDATA[<]]> #{date}
+	</select>
+
+	<delete id="delDateInfo">
+		delete from `zh_black` where `black_uid`=#{uid}
+	</delete>
+
+	<update id="setDateInfo" parameterType="com.zh_ai.entity.Black">
+		update `zh_black` set `Blck_Date`=#{date} where `black_uid`=#{user.id}
+	</update>
+	<insert id="insert" parameterType="com.zh_ai.entity.Black">
+		INSERT INTO `zh_black`(`black_uid`,`black_date`) VALUES(#{user.id},#{date});
+	</insert>
+</mapper>

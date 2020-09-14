@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.zh_ai.dao.GoodsDao">
+	<resultMap id="goodsMap" type="com.zh_ai.entity.Goods">
+		<id property="id" column="goods_id" />
+		<result property="name" column="goods_name"/>
+		<result property="price" column="goods_price"/>
+		<result property="status" column="goods_status"/>
+		<result property="count" column="goods_count"/>
+		<result property="sales" column="goods_sales"/>
+		<result property="a" column="goods_a"/>
+		<association property="type" column="goods_typeid1" select="com.zh_ai.dao.GType1Dao.getTypeById"/>
+	</resultMap>
+
+	<select id="getAllInfo" resultMap="goodsMap">
+		select * from `zh_goods`
+	</select>
+	<select id="getInfo" resultMap="goodsMap" parameterType="map">
+		SELECT * FROM `zh_goods` WHERE `goods_a` =#{name} LIMIT #{count};
+	</select>
+	<select id="getGoodsInfo" resultMap="goodsMap">
+		select * from `zh_goods` where `goods_id`=#{id}
+	</select>
+
+	<select id="getTypeGoodsInfo" resultMap="goodsMap">
+		select * from `zh_goods` where `goods_typeid1`= #{typeOne}
+	</select>
+
+	<select id="getNameGoodsInfo" resultMap="goodsMap">
+		select * from `zh_goods` where `goods_name` like concat('%',#{name},'%')
+	</select>
+
+	<select id="getDesc10" resultMap="goodsMap">
+		select * from `zh_goods` ORDER BY `goods_sales` DESC limit 0,10
+	</select>
+
+	<delete id="delInfo">
+		delete from `zh_goods` where `goods_id`=#{id}
+	</delete>
+
+	<update id="setInfo" parameterType="Goods">
+		update `zh_goods` set `goods_name`=#{name},`goods_Typeid1`=#{type.id},`goods_price`=#{price},`goods_status`=#{status},`goods_count`=#{count} where `goods_id`=#{id}
+	</update>
+
+	<insert id="addInfo" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
+		insert into `zh_goods`(`goods_name`,`goods_Typeid1`,`goods_price`,`goods_count`) values (#{name},#{type.id},#{price},#{count})
+	</insert>
+
+
+</mapper>

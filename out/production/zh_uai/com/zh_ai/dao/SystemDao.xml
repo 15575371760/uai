@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.zh_ai.dao.SystemDao">
+	<resultMap id="sysMap" type="Sys">
+		<id property="id" column="system_id"/>
+		<result property="pwd" column="system_pwd"/>
+		<result property="name" column="system_name"/>
+		<result property="grade" column="system_grade"/>
+	</resultMap>
+
+	<select id="getAllInfo" resultMap="sysMap">
+		select * from zh_system
+	</select>
+
+	<select id="getAllCount" parameterType="int">
+		select count(1) from zh_system
+	</select>
+
+	<select id="getInfo" resultMap="sysMap">
+		select * from `zh_system` where `system_id`=#{id}
+	</select>
+
+	<select id="getNameInfo" resultMap="sysMap">
+		select * from `zh_system` where `system_name` like concat('%',#{name},'%')
+	</select>
+
+	<select id="getSysInfo" resultMap="sysMap">
+		select * from `zh_system` where `system_id`=#{id} and `system_pwd`=#{pwd}
+	</select>
+
+	<select id="getGradeInfo" resultMap="sysMap">
+		select * from `zh_system` where `system_grade`=#{i}
+	</select>
+
+	<update id="setPwd">
+		update `zh_System` set `system_pwd`=#{tpwd} where `system_id`=#{id} and `system_pwd`=#{pwd}
+	</update>
+
+	<insert id="addSystem" parameterType="Sys">
+		insert into `zh_system`(system_id,system_pwd,system_name,system_grade) values(#{id},#{pwd},#{name},#{grade})
+	</insert>
+
+	<delete id="delSystem">
+		delete from `zh_system` where `system_id`=#{id}
+	</delete>
+</mapper>

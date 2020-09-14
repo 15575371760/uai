@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="zh_uai:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/zh_uai_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="zh_uai/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="zh_uai" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

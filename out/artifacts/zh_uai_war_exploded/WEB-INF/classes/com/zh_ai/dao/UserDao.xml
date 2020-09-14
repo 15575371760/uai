@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.zh_ai.dao.UserDao">
+	<resultMap id="userMap" type="com.zh_ai.entity.User">
+		<id column="user_id" property="id"/>
+		<result column="user_pwd" property="pwd"/>
+		<result column="user_name" property="name"/>
+		<result column="user_sex" property="sex"/>
+		<result column="user_age" property="age"/>
+		<result column="user_idNo" property="idNO"/>
+		<result column="user_phone" property="phone"/>
+		<result column="user_address" property="address"/>
+		<result column="user_mailbox" property="mailbox"/>
+		<result column="User_status" property="status"/>
+	</resultMap>
+
+	<select id="getUserInfo" resultMap="userMap">
+		select * from zh_user where user_id = #{id}
+	</select>
+
+	<select id="getUserId" resultMap="userMap" parameterType="com.zh_ai.entity.User">
+		select * from `zh_user` where `user_id`=#{id} and `user_pwd`=#{pwd}
+	</select>
+
+	<select id="getAllUserid" resultMap="userMap">
+		select * from `zh_user`
+	</select>
+
+	<update id="addUserIdNo">
+		update `zh_user` set `user_idNo`=#{idNo} where `user_id`=#{id} and `user_pwd`=#{pwed}
+	</update>
+
+	<update id="setUserPwd">
+		update `zh_user` set `user_pwd`=#{tpwd} where `user_id`=#{id} and `user_pwd`=#{pwd}
+	</update>
+
+	<update id="setUserInfo" parameterType="User">
+		UPDATE `zh_user` SET `user_name`=#{name},`user_sex`=#{sex},`user_phone`=#{phone},`user_address`=#{address} WHERE `user_id`=#{id} AND `user_pwd`=#{pwd}
+	</update>
+
+	<insert id="addUser" parameterType="User">
+		insert into `zh_user`(`user_id`,`user_pwd`,`user_name`,`user_sex`,`user_age`,`user_idNo`,`user_Phone`,`user_address`,`user_mailbox`) values(#{id},#{pwd},#{name},#{sex},#{age},#{idNo},#{phone},#{address},#{maibox})
+	</insert>
+</mapper>

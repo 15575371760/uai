@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace把映射文件与接口文件进行关联  -->
+<mapper namespace="com.zh_ai.dao.TradeTableDao">
+	<!--<cache
+	  eviction="FIFO"
+	  flushInterval="60000"
+	  size="512"
+	  readOnly="true"/>-->
+	<!--当实体对象的属性值与数据表的字段名不匹配时，则用resultMap来做映射 -->
+	<resultMap type="TradeTable" id="TradeTableMap">
+		<!--id与result节点是一个意思，只是把主键进行一个标记  -->
+		<!-- <id property="bookId" column="bookId"/> -->
+		<!-- <result property="实体类对应的属性" column="数据库字段名"/> -->
+		<id property="id" column="trade_id"/>
+		<result property="num" column="trade_num"/>
+		<!--多对一-->
+		<association property="goods" column="trade_gid" select="com.zh_ai.dao.GoodsDao.getGoodsInfo"/>
+		<association property="user" column="trade_uid" select="com.zh_ai.dao.UserDao.getUserInfo"/>
+	</resultMap>
+	
+	<!-- 注意：id属性的值必须与方法名匹配一致;  resultType是别名，返回的类型MyBites会自动把查询的结果封装成BookQuery对象，再进一步封装成相应的类型。 -->
+	<!--resultType="BookQuery"   resultMap="BookQueryMap" 二选一-->
+	<!--按用户id查询购物车信息-->
+	<select id="getTradeTableInfo" resultMap="TradeTableMap">
+		select * from `zh_tradeTable` where `trade_uid`=#{uid}
+	</select>
+	<!--查看单个购物车信息-->
+	<select id="getInfo" resultMap="TradeTableMap">
+		select * from `zh_tradeTable` where `trade_id`=#{tid}
+	</select>
+	<!--查看当个商品被加入购物车的次数-->
+	<select id="getGoodsTradeTable" resultType="int">
+		select count(1) from `zh_tradeTable` where `trade_id`=#{tid}
+	</select>
+	<!--查询购物车表的信息行数-->
+	<select id="getTradeNumBer" resultType="int">
+		select count(1) from `zh_tradeTable`
+	</select>
+	<insert id="insert" parameterType="TradeTable">
+		INSERT INTO `zh_tradetable` (`trade_gid` ,`trade_num` ,`trade_uid` )VALUES (#{goods.id},#{num},#{user.id});
+	</insert>
+	<!--更新一条购物车语句-->
+	<update id="update" parameterType="TradeTable">
+		UPDATE `zh_tradetable` SET `trade_num` = #{num} WHERE `trade_id` =#{id};
+	</update>
+	<!--删除一条购物车信息-->
+	<delete id="del" >
+		delete from zh_tradetable where trade_id=#{id}
+	</delete>
+</mapper> 

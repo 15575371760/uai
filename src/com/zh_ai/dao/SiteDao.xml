@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace把映射文件与接口文件进行关联  -->
+<mapper namespace="com.zh_ai.dao.SiteDao">
+	<!--开启二级缓存-->
+	<!--<cache
+	  eviction="FIFO"
+	  flushInterval="60000"
+	  size="512"
+	  readOnly="true"/>-->
+	<!--当实体对象的属性值与数据表的字段名不匹配时，则用resultMap来做映射 -->
+	<resultMap type="Site" id="SiteMap">
+		<!--id与result节点是一个意思，只是把主键进行一个标记  -->
+		<!-- <id property="bookId" column="bookId"/> -->
+		<!-- <result property="实体类对应的属性" column="数据库字段名"/> -->
+		<id property="id" column="site_id"/>
+		<result property="name" column="site_name"/>
+		<result property="site" column="site_site"/>
+		<result property="contactway" column="site_contactway"/>
+		<result property="a" column="site_a"/>
+		<result property="b" column="site_b"/>
+		<result property="c" column="site_c"/>
+		<association property="user" column="site_uid" select="com.zh_ai.dao.UserDao.getUserInfo"/>
+	</resultMap>
+	
+	<!-- 注意：id属性的值必须与方法名匹配一致;  resultType是别名，返回的类型MyBites会自动把查询的结果封装成BookQuery对象，再进一步封装成相应的类型。 -->
+	<!--resultType="BookQuery"   resultMap="BookQueryMap" 二选一-->
+	<!--按收货地址编号查看信息-->
+	<select id="getSite" resultMap="SiteMap" parameterType="int">
+
+		<!-- Sql的编写 -->
+		select * from zh_site where site_id=#{id}
+	</select>
+	<!--按用户编号查询收货地址信息-->
+	<select id="getUidSite" resultMap="SiteMap" >
+		<!-- Sql的编写 -->
+		select * from zh_site where site_uid=#{uid}
+	</select>
+
+	<!--添加-->
+	<insert id="addSite" parameterType="Site">
+		insert into `zh_site`(site_uid,site_site,site_name,site_contactway) values(#{user.id},#{site},#{name},#{contactway})
+	</insert>
+
+	<!--修改-->
+	<update id="setSite" parameterType="Site">
+		update `zh_site` set site_name=#{name},site_site=#{site},site_contactway=#{contactway} where site_uid=#{user.id} and site_id=#{id}
+	</update>
+
+	<!--删除-->
+	<delete id="delSite" >
+		delete from zh_site where site_id=#{id}
+	</delete>
+
+</mapper> 

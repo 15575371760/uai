@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace把映射文件与接口文件进行关联  -->
+<mapper namespace="com.zh_ai.dao.OrderDao">
+	<!--当实体对象的属性值与数据表的字段名不匹配时，则用resultMap来做映射 -->
+	<resultMap type="Order" id="OrderMap">
+		<!--id与result节点是一个意思，只是把主键进行一个标记  -->
+		<!-- <id property="bookId" column="bookId"/> -->
+		<!-- <result property="实体类对应的属性" column="数据库字段名"/> -->
+		<id property="id" column="order_id"/>
+		<result property="phone" column="order_phone"/>
+		<result property="num" column="order_num"/>
+		<result property="sumMoney" column="order_sumMoney"/>
+		<result property="date" column="order_date"/>
+		<result property="statusNo" column="order_statusNo"/>
+		<result property="remarks" column="order_remarks"/>
+		<association property="user" column="order_uid" select="com.zh_ai.dao.UserDao.getUserInfo"/>
+		<association property="site" column="order_siteid" select="com.zh_ai.dao.SiteDao.getSite"/>
+		<association property="goods" column="order_gid" select="com.zh_ai.dao.GoodsDao.getGoodsInfo"/>
+	</resultMap>
+	
+	<!-- 注意：id属性的值必须与方法名匹配一致;  resultType是别名，返回的类型MyBites会自动把查询的结果封装成BookQuery对象，再进一步封装成相应的类型。 -->
+	<!--resultType="BookQuery"   resultMap="BookQueryMap" 二选一-->
+	<!--按订单编号查询订单信息-->
+	<select id="getInfo" resultMap="OrderMap" >
+		select * from `zh_order` where `order_id`=#{id}
+	</select>
+	<!--查询所有的订单信息，如果需要分类，则在业务逻辑层进行操作-->
+	<select id="getAllInfo" resultMap="OrderMap">
+		select * from `zh_order`
+	</select>
+	 <!--按用户账号来查询订单编号-->
+	<select id="getUidInfo" resultMap="OrderMap">
+		select * from `zh_order` where `order_uid`=#{user.id}
+	</select>
+	<!--按订单状态查询订单信息-->
+	<select id="getStatusInfo" resultMap="OrderMap">
+		select * from `zh_order` where `order_statusNo`=#{statusNo}
+	</select>
+	<!--后台按订单编号删除-->
+	<delete id="delOrderInfo">
+		delete from `zh_order` where `order_id` =#{id}
+	</delete>
+	<!--按订单编号修改订单状态（是否已收货）-->
+	<update id="setOrderInfo" parameterType="Order" >
+		update `zh_order` set `order_statusNo`=#{statusNo} where `order_id`=#{id}
+	</update>
+	<!--添加一条订单信息	-->
+	<insert id="addOrderInfo" parameterType="Order">
+		insert into `zh_order`(`order_id`,`order_uid`,`order_phone`,`order_siteid`,`order_gid`,`order_num`,`order_sumMoney`,`order_remarks`)
+		values(#{id},#{user.id},#{phone},#{site.id},#{goods.id},#{num},#{sumMoney},#{remarks})
+	</insert>
+</mapper> 

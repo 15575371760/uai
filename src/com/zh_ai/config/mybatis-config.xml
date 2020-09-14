@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- ? 0-1个 * 0-N个 + 1-N个 1个 -->
+    <!-- 为了灵活，通常把连接数据库的配置写在一个独立的文件中，这个节点可以加载此文件。 -->
+    <properties resource="com/zh_ai/config/jdbc.properties" />
+    <!-- 配置MyBites框架自身运行时的一些配置，通常情况下不需要配置，都采用默认配置就行了 -->
+    <!-- 	<settings>
+            <setting name="cacheEnabled" value="true" />
+
+        </settings> -->
+    <!-- 给实体类取别名，方便在框架中使用实体对象 -->
+    <typeAliases>
+        <!-- 给某一个类取别名 -->
+        <!-- <typeAlias type="com.leave.entity.LeaveRecords" alias="LeaveRecords"/> -->
+        <!-- 把这个包中的所以类取一个别名，命名规则是 ： 别名=类名 -->
+        <package name="com.zh_ai.entity"/>
+    </typeAliases>
+    <!-- MyBites的环境配置,这个配置是MyBites与数据库进行交互的环境，在实际中，通常会配置多个环境
+                开发环境，运行环境，测试环境
+    -->
+    <environments default="development">
+        <!-- 环境的名称 -->
+        <environment id="development">
+            <!-- 事务的管理，有两个值可取 JDBC|MANAGED -->
+            <transactionManager type="JDBC"/>
+            <!-- 数据源，配置与数据库的连接对象 有3个值：UNPOOLED | POOLED | JNDI
+               UNPOOLED 不运用连接池
+               POOLED 用连接池，MyBites内部提供了一个连接池的。
+               JNDI 借助Tomcat的JNDI的配置
+             -->
+            <dataSource type="POOLED">
+                <!-- ${driver} 从 jdbc.properties文件中取数据  -->
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- 配置映射文件。映射文件中封装了SQL,通常有多少Dao接口，就有多少映射文件 -->
+    <mappers>
+        <!-- 如果有多个映射文件，则需要写许多句代码，但是映射文件与Dao接口可以不是同一目录 -->
+        <!--  <mapper resource="com/leave/mapping/LeaveRecordsDao.xml"/> -->
+        <!-- 把某个包中的映射文件全部加载，但是要求映射文件与接口在同一目录下 -->
+        <package  name="com.zh_ai.dao"/>
+    </mappers>
+</configuration>

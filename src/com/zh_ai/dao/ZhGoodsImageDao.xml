@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.zh_ai.dao.ZhGoodsImageDao">
+	<resultMap id="userMap" type="com.zh_ai.entity.ZhGoodsImage">
+		<id column="Image_id" property="imageId"/>
+		<result column="Image_image" property="content"/>
+		<result column="Image_type" property="type"/>
+		<association property="goods" column="Image_gid" select="com.zh_ai.dao.GoodsDao.getGoodsInfo" />
+	</resultMap>
+
+	<insert id="addInfo" parameterType="com.zh_ai.entity.ZhGoodsImage">
+		insert into zh_goods_image(Image_gid,Image_image,Image_type) values(#{goods.id},#{content},#{type})
+	</insert>
+
+</mapper>

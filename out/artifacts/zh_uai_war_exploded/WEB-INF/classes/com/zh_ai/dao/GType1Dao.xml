@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.zh_ai.dao.GType1Dao">
+	<resultMap id="typeMap" type="com.zh_ai.entity.Goods_Type">
+		<id property="id" column="gtype_id"/>
+		<result property="image" column="gtype_image"/>
+		<result property="name" column="gtype_name"/>
+		<collection property="goods" column="gtype_id" select = "com.zh_ai.dao.GoodsDao.getTypeGoodsInfo"/>
+	</resultMap>
+
+	<select id="getAllInfo" resultMap="typeMap">
+		select * from `zh_goods_Type1`
+	</select>
+
+	<update id="setInfo" parameterType="Goods_Type">
+		update `zh_goods_type1` set `gtype_name`=#{name} where `gtype_id`=#{id}
+	</update>
+
+	<delete id="delInfo">
+		delete from `zh_goods_Type1` where `Gtype_id`=#{id}
+	</delete>
+
+	<insert id="addInfo" parameterType="Goods_Type">
+		insert into `zh_goods_type1`(`gtype_name`,`gtype_image`) values(#{name},#{image})
+	</insert>
+
+	<select id="getTypeById" resultMap="typeMap">
+		select * from zh_goods_type1 where gtype_id = #{id}
+	</select>
+</mapper>
